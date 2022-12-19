@@ -42,6 +42,16 @@
 		}
 		$("#frm").submit()
 	})//btnjoin
+	
+	//엔터키 이벤트
+    var input = document.getElementById("password");
+
+    input.addEventListener("keyup", function (event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("btnlogin").click();
+      }
+    });
 </script>
 
 <%@ include file="../includes/footer.jsp"%>

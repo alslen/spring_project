@@ -60,5 +60,26 @@ public class CampingService {
 		public Camping detail(Long camp_id) {
 			return campRepository.findById(camp_id).get();
 		}
+		
+	// 삭제
+	public void delete(Long camp_id) {
+		campRepository.deleteById(camp_id);
+	}
+	
+	// 캠핑장 수정
+	@Transactional
+	public void update(Camping camping) {
+		Camping c = campRepository.findById(camping.getCamp_id()).get();
+		c.setAddress(camping.getAddress());
+		c.setCamp_category(camping.getCamp_category());
+		c.setCamp_email(camping.getCamp_email());
+		c.setCamp_tel(camping.getCamp_tel());
+		c.setCamp_title(camping.getCamp_title());
+		c.setCount(camping.getCount());
+		c.setMaster(camping.getMaster());
+		c.setRoom_info(camping.getRoom_info());
+		c.setPrice(camping.getPrice());
+		
+	}
 
 }

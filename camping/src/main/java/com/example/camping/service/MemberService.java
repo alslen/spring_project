@@ -23,7 +23,7 @@ public class MemberService {
 		String rawPassword = member.getPassword();
 		String encPassword = encoder.encode(rawPassword);
 		member.setPassword(encPassword); //암호화 된 비번
-		member.setRole("ROLE_USER");
+		member.setRole("ROLE_ADMIN");
 		memberRepository.save(member);
 	
 	}

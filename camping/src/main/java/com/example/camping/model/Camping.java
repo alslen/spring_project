@@ -3,6 +3,7 @@ package com.example.camping.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -36,13 +40,15 @@ public class Camping {
 	private Long price;
 	private String room_info;  // 객실정보
 	
-	@OneToMany(mappedBy = "camping")
+	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("camping")
+	@JsonIgnore
 	private List<Review> review;
 	
 	@OneToOne(mappedBy = "camping")
 	private Wishlist wishList;
 	
-	@OneToMany(mappedBy = "camping")
+	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
 	private List<Picture> picture;
 	
 	@OneToOne(mappedBy = "camping")

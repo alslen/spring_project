@@ -15,6 +15,9 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,13 +38,15 @@ public class Review {
 	
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
 	@Column(name="review_date")
 	private Date reviewDate;
 	
 	private Long score;  // 별점
 	
 	@ManyToOne
-	@JoinColumn(name="camp_id")
+	@JoinColumn(name="camp")
+	@JsonIgnore
 	private Camping camping;
 	
 	@PrePersist

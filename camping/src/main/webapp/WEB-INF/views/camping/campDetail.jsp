@@ -2,8 +2,10 @@
     pageEncoding="UTF-8"%>
        
 <%@ include file="../includes/header.jsp"%>
-<style>
+<link href="/css/score.css" rel="stylesheet">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4eeebc573cb6c8b6d05d232c6bf107d1&libraries=services"></script>
 
+<style>
 ul.tabs{
   margin: 0px;
   padding: 0px;
@@ -34,7 +36,6 @@ ul.tabs li.current{
 textarea {
 	border:1px solid gray;
 }
-
 </style>
 
 <script>
@@ -54,6 +55,7 @@ $(document).ready(function(){
 </script>
 
 <div class="container mt-5 mb-5">
+<input type="hidden" name="camp_id" id="camp_id" value="${camp.camp_id}">
 <h2 style="font-weight:bold;">${camp.camp_title}</h2>
 <hr>
 	<div style="float:left; width:50%" >
@@ -113,20 +115,223 @@ $(document).ready(function(){
 
 <div class="container" >
   <ul class="tabs" style="margin-top:400px;">
-    <li class="tab-link current" data-tab="tab-1">객실안내/예약</li>
+    <li class="tab-link current" data-tab="tab-1">소개</li>
     <li class="tab-link" data-tab="tab-2">숙소위치</li>
     <li class="tab-link" data-tab="tab-3">리뷰</li>
   </ul>
-  <div id="tab-1" class="tab-content current">tab content1</div>
-  <div id="tab-2" class="tab-content">tab content2</div>
+  	<div id="tab-1" class="tab-content current">${camp.room_info }</div>
+  	<div id="tab-2" class="tab-content">
+  	주소 : ${camp.address}
+	<div id="map" style="width:100%;height:350px;"></div>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch('${camp.address}', function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">캠핑장 위치</div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});    
+</script>
+ </div>
+  
   <div id="tab-3" class="tab-content">
-  		<div class="container" style="vartical-align:top;">
-  		<textarea rows="3" cols="20" id="msg"></textarea>
-		<button type="button" class="btn btn-info" id="btnComment" style=" float:right; height:83px;">답글쓰기</button>
+  		<div class="container" >
+  		<sec:authorize access="isAuthenticated()">
+  		<form class="mb-3" name="myform" id="myform" method="post">
+	<fieldset>
+		<span class="text-bold">별점을 선택해주세요</span>
+		<input type="radio" name="reviewStar" value="5" id="rate1"><label
+			for="rate1">★</label>
+		<input type="radio" name="reviewStar" value="4" id="rate2"><label
+			for="rate2">★</label>
+		<input type="radio" name="reviewStar" value="3" id="rate3"><label
+			for="rate3">★</label>
+		<input type="radio" name="reviewStar" value="2" id="rate4"><label
+			for="rate4">★</label>
+		<input type="radio" name="reviewStar" value="1" id="rate5"><label
+			for="rate5">★</label>
+	</fieldset>
+	<div>
+		<textarea class="col-auto form-control" type="text" id="msg" placeholder="리뷰를 남겨주세요."></textarea>
+	</div>
+	<br>
+	<div style="float:right">
+	<button style=" display: inline-block;" type="button" class="btn btn-info" id="btnComment">등록하기</button>
+	</div>
+</form>		
+</sec:authorize>
+<br>
+		<h3>후기(<span id="reviewCnt"></span>)</h3><br>
+		<div id="reviewResult"></div>
+		<br>
 		</div>
   </div>
-  
+  <br>
+  <c:if test="${principal.member.role == 'ROLE_ADMIN' }">
+  <div>
+  	<button type="button" class="btn btn-info" id="btnUpdate">수정</button>
+  	<button type="button" class="btn btn-info" id="btnDelete">삭제</button>
+  </div>
+  </c:if>
 </div>
+
+<script>
+
+// 캠핑장 수정
+$("#btnUpdate").click(function(){
+	location.href="/camping/update/${camp.camp_id}";
+})
+
+// 캠핑장 삭제
+$("#btnDelete").click(function(){
+	if(!confirm('정말 삭제하시겠습니까?')) return false;
+	$.ajax({
+		type:'delete',
+		url:'/camping/delete/${camp.camp_id}',
+		success:function(resp){
+			alert("삭제되었습니다.")
+			location.href="/list"
+		},
+		error:function(e){
+			alert("삭제 실패")
+		}
+	})
+})
+
+//댓글 추가
+$("#btnComment").click(function(){
+	if($("#msg").val()==''){
+		alert("입력해주세요.")
+		return
+	}
+	var data = {
+			"camp":$("#camp_id").val(),
+			"content":$("#msg").val(),
+			"score":$("input[name=reviewStar]:checked").val()
+	}
+	$.ajax({
+		type:'post',
+		url:'/review/insert/'+$("#camp_id").val(),
+		contentType:"application/json;charset=utf-8",
+		data:JSON.stringify(data)
+	})
+	.done(function(resp){
+		alert("댓글을 추가했습니다.")
+		init();
+	})
+	.fail(function(){
+		alert("댓글 추가 실패")
+	})
+})  // btnComment
+
+
+// 댓글 리스트
+var init = function(){
+	$.ajax({
+		type:'get',
+		url:'/review/list/'+$("#camp_id").val()
+	}) // ajax
+	.done(function(resp){
+		var str = "";
+		var innerHtml = "";
+		$.each(resp.rlist, function(key,val){
+			str += "<h4>"+val.member.username+"</h4>"
+			if(val.score==5) {
+				for(i=0; i<val.score; i++)
+					str += "<img src='/img/y_star.png'/>"
+			}
+			else if(val.score == 4) {
+				for(i=0; i<val.score; i++) str += "<img src='/img/y_star.png'/>"
+				for(i=0; i<5-val.score; i++) str += "<img src='/img/star.png'/>"
+			}
+			else if(val.score == 3) {
+				for(i=0; i<val.score; i++) str += "<img src='/img/y_star.png'/>"
+				for(i=0; i<5-val.score; i++) str += "<img src='/img/star.png'/>"
+			}
+			else if(val.score == 2) {
+				for(i=0; i<val.score; i++) str += "<img src='/img/y_star.png'/>"
+				for(i=0; i<5-val.score; i++) str += "<img src='/img/star.png'/>"
+			}
+			else if(val.score == 1) {
+				for(i=0; i<val.score; i++) str += "<img src='/img/y_star.png'/>"
+				for(i=0; i<5-val.score; i++) str += "<img src='/img/star.png'/>"
+			}
+			else {
+				for(i=0; i<5; i++) str += "<img src='/img/star.png'/>"
+			}
+			str += "<p>"+val.reviewDate+"</p>"
+			str += val.content
+			if("${principal.member.id}"== val.member.id) {
+				str += "<br><div style='text-align:right'>"
+				str += "<a href='javascript:fupdate("+val.reviewNum+")'>수정</a> | "
+				str += "<a href='javascript:fdel("+val.reviewNum+")'>삭제</a></td>"
+				str += "</div>"
+			}
+			
+			str += "<br><hr><br>"
+		})
+		$("#reviewResult").html(str);
+		$("#reviewCnt").text(resp.count);
+	}) // done
+}  // init
+
+// 댓글 삭제
+function fdel(reviewNum){
+	if(!confirm('정말 삭제하시겠습니까?')) return false;
+	$.ajax({
+		type:'delete',
+		url:'/review/delete/'+reviewNum
+	})
+	.done(function(resp){
+		alert("댓글이 삭제되었습니다.")
+		init()
+	})
+	.fail(function(e){
+		alert("댓글 삭제 실패")
+	})
+}  //fdel 
+
+// 댓글 수정폼
+function fupdate(reviewNum){
+	var htmls = "";
+
+	htmls += '<textarea name="editContent" id="editContent" class="form-control" rows="3">';
+	htmls += '</textarea>';
+
+}
+
+init();
+</script>
+
 
 
 

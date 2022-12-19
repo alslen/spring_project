@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +30,7 @@ public class Member {
 	private String phone;  // 전화번호
 	private String role;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "member")
 	private List<Review> review;
 	
