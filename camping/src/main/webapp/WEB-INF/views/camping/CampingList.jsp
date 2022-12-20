@@ -19,7 +19,7 @@
 			          <div class="d-flex justify-content-between align-items-center">
 				          <div class="btn-group">
 				          <div id="likeDiv">
-					          <button type="button" id="likeBtn" data-mid="${product.camp_id}" class="btn btn-sm btn-outline-secondary">Like</button>
+					          <button type="button" data-mid="${product.camp_id}" class="btn btn-sm btn-outline-secondary btnLike">Like</button>
 					          <button type="button" class="btn btn-sm btn-outline-secondary" id="count">0</button>
 					       </div>
 				          </div>
@@ -33,23 +33,21 @@
 </c:forEach>
 
 <script>
-// 좋아요 버튼 클릭
-	$("#likeDiv").on("click", "#likeBtn", function(){
-		var count = 0;
-		$.ajax({
-			type:'get',
-			url : '/like/insert',
-			data:{"id" : ${principal.member.id},
-				"camping" : $(this).data('mid')}
-		})
-		.done(function(resp){
-			count++;
-			count = document.getElementById("count").value;
-		})
-		.fail(function(e){
-			
-		})
-	}) // likeDiv
+ let i = 1;
+ 
+ let current = 0;
+ 
+ function showSlide(){
+	 const images = document.querySelectorAll(".img[data-src='1']");
+	 for(let i=0; i<images.length;i++){
+		 images[i].classList.remove('on');
+	 }
+	 current++;
+	 if(current > images.length){
+		 current = 1;
+	 }
+	 images[current-1].classList.add('on');
+ }
 </script>
 
 <%@ include file="../includes/footer.jsp"%>

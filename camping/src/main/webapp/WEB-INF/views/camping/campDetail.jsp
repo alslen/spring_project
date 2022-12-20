@@ -36,6 +36,11 @@ ul.tabs li.current{
 textarea {
 	border:1px solid gray;
 }
+
+.oneLine h2,
+.onneLine a {
+	display: inline;
+}
 </style>
 
 <script>
@@ -56,8 +61,60 @@ $(document).ready(function(){
 
 <div class="container mt-5 mb-5">
 <input type="hidden" name="camp_id" id="camp_id" value="${camp.camp_id}">
-<h2 style="font-weight:bold;">${camp.camp_title}</h2>
+<div class="oneLine">
+	<h2 style="font-weight:bold;">${camp.camp_title}</h2>
+	<c:if test="${like==0}">
+	<a class="text-dark" style="text-decoration-line: none;" id="like_check">
+		<img id="likeImg" src="/img/heart-fill.png"><span id="likeCnt"></span>
+	</a>
+	</c:if>
+	<c:if test="${like==1 }">
+	<a class="text-dark" style="text-decoration-line: none;" id="like_check">
+		<img id="likeImg" src="/img/heart.png"><span id="likeCnt"></span>
+	</a>
+	</c:if>
+</div>
 <hr>
+<script>
+//좋아요 버튼을 클릭 시 실행되는 코드
+  let likeVal = document.getElementById('like_check').value
+  const boardId = $("#boardId").val();
+  const memberId = $("#memberId").val();
+  console.log(memberId);
+   console.log(likeVal);
+   const likeImg = document.getElementById("likeImg")
+
+    if (likeVal > 0) {
+       likeImg.src = "/img/heart.png";
+       } else {
+            likeImg.src = "/img/heart-fill.png";
+       }
+        
+$("#likeImg").on("click", function () {
+	if(${principal.username == null}){
+		alert("로그인을 해주세요")
+		return;
+	}
+	var count = 0;
+    $.ajax({
+        url: '/camping/like',
+        type: 'post',
+        data: {'camping': ${camp.camp_id}, 'id': ${principal.member.id}},
+        success: function (data) {
+            if (data == "success") {
+                $("#likeImg").attr("src", "/img/heart.png");
+
+            } else {
+                $("#likeImg").attr("src", "/img/heart-fill.png");
+            }
+        }, error: function () {
+            console.log('오타 찾으세요')
+        }
+
+    });  // ajax
+});  // likeImg
+
+</script>
 	<div style="float:left; width:50%" >
 	<div id="demo" class="carousel mt-3" data-bs-ride="carousel" style="">
 	  	<!-- Indicators/dots -->
@@ -87,7 +144,7 @@ $(document).ready(function(){
 	</div>
 
 	<div style="float:right; margin-right:10%; margin-bottom:300px;">
-		<table class="table table-borderless medium_text" style="text-align: center;">
+		<table class="table table-borderless medium_text" style="text-align: center; font-size:14px;">
 			<tr>
 				<td><strong>주소</strong></td>
 				<td>${camp.address}</td>
@@ -205,6 +262,8 @@ geocoder.addressSearch('${camp.address}', function(result, status) {
 </div>
 
 <script>
+
+
 
 // 캠핑장 수정
 $("#btnUpdate").click(function(){

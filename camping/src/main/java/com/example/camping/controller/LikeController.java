@@ -14,13 +14,4 @@ import com.example.camping.service.LikeService;
 @RequestMapping("/like/*")
 public class LikeController {
 
-	@Autowired
-	private LikeService likeService;
-	
-	@GetMapping("insert")
-	@ResponseBody
-	public String insert(Wishlist wishlist) {
-		likeService.insert(wishlist);
-		return "success";
-	}
 }

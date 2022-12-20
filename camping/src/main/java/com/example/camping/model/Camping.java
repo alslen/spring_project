@@ -1,6 +1,7 @@
 package com.example.camping.model;
 
 import java.util.Date;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -45,8 +46,8 @@ public class Camping {
 	@JsonIgnore
 	private List<Review> review;
 	
-	@OneToOne(mappedBy = "camping")
-	private Wishlist wishList;
+	@OneToMany(mappedBy = "camping")
+	private List<Wishlist> wishList;
 	
 	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
 	private List<Picture> picture;
