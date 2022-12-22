@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../includes/header.jsp"%>
-
+<%@ include file="/WEB-INF/views/user/menuBar.jsp"%>
 <div class="container">
 	<div class="content">
 	<h3 align="center" style="color: #ffc107; margin-top:50px;">회원정보 수정</h3>

@@ -11,20 +11,20 @@
 		<input type="text" class="form-control" id="camp_title" name="camp_title" placeholder="Enter camp_title">
 		</div>
 		<div class="form-group">
-		<label for="room_name" >호실 이름 :</label>
-		<input type="text" class="form-control" id="room_name" name="room_name" placeholder="Enter room_name">
-		</div>	
+		<label for="camp_title">캠핑장 주소 : </label>
+		<input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+		</div>
 		<div class="form-group">
-		<label for=book_date>이용일자 :</label>
-		<input type="text" class="form-control" id="book_date" name="book_date" placeholder="Enter book_date">
+		<label for="camp_title">캠핑장 전화번호 : </label>
+		<input type="text" class="form-control" id="camp_tel" name="camp_tel" placeholder="Enter camp_tel">
 		</div>
 		<div class="form-group">
 		<label for="checkin">체크인 :</label>
-		<input type="text" class="form-control" id="checkin" name="checkin" placeholder="Enter checkin">
+		<input type="date" class="form-control" id="checkin" name="checkin" placeholder="Enter checkin">
 		</div>
 		<div class="form-group">
 		<label for="checkout">체크아웃 :</label>
-		<input type="text" class="form-control" id="checkout" name="checkout" placeholder="Enter checkout">
+		<input type="date" class="form-control" id="checkout" name="checkout" placeholder="Enter checkout">
 		</div>
 	</div>
 	<hr>

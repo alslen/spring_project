@@ -2,6 +2,10 @@ package com.example.camping.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -98,5 +102,19 @@ public class HomeController {
 		session.invalidate();
 		return "success";
 	}
+	
+	//회원 리스트 전체보기 : 페이징, 검색
+	@GetMapping("memberList")
+	public String memberList(Model model,
+				@PageableDefault(size=5, sort="id",
+				direction = Direction.DESC)Pageable pageable,
+				@RequestParam(required = false,defaultValue = "") String field,
+				@RequestParam(required = false,defaultValue = "") String word) {
+			Page<Member> mlists = memberService.findAll(field, word, pageable);
+			Long count = memberService.count(field, word);
+			model.addAttribute("count", count);
+			model.addAttribute("mlist", mlists);
+			return "/user/memberList";
+		}
 
 }

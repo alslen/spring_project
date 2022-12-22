@@ -22,6 +22,7 @@ import com.example.camping.repository.MemberRepository;
 import com.example.camping.repository.PictureRepository;
 
 @Service
+@Transactional
 public class CampingService {
 
 	@Autowired
@@ -33,8 +34,6 @@ public class CampingService {
 	@Autowired
 	private LikeRepository likeRepository;
 
-	@Autowired
-	private MemberRepository memberRepository;
 
 	// 캠핑장 추가
 	public void insert(Camping camp) {
@@ -80,6 +79,29 @@ public class CampingService {
 	// 캠핑장 수정
 	@Transactional
 	public void update(Camping camping) {
+		
+		
+		
+		UUID uuid = UUID.randomUUID();
+		List<MultipartFile> fileList = camping.getUpload();
+		String uploadFileName = "";
+		if (!fileList.isEmpty()) {
+			for (MultipartFile f : fileList) {
+				uploadFileName = uuid.toString() + "_" + f.getOriginalFilename();
+				File saveFile = new File(uploadFileName);
+				Picture p = new Picture();
+				p.setCamping(camping);
+				p.setPic_name(uploadFileName);
+				System.out.println("p : " + p);
+				pictureRepository.save(p);
+				
+				try {
+					f.transferTo(saveFile);
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		Camping c = campRepository.findById(camping.getCamp_id()).get();
 		c.setAddress(camping.getAddress());
 		c.setCamp_category(camping.getCamp_category());
@@ -90,44 +112,43 @@ public class CampingService {
 		c.setMaster(camping.getMaster());
 		c.setRoom_info(camping.getRoom_info());
 		c.setPrice(camping.getPrice());
-
 	}
 	
-	@Transactional
-	public void saveLike(Wishlist wishlist) {
-		
-		likeRepository.save(wishlist);
-		
-		Wishlist w = likeRepository.findById(wishlist.getWishNum()).get();
-		//w.setCount(wishlist.getCount()+1);
-	}
-
-	  public int findLike(Long camp_id, Long id) { 
+	// 좋아요 눌렀는지 확인
+	public int findLike(Long camp_id, Long id) { 
 		  Wishlist findLike = likeRepository.findByLike(camp_id, id);
 		  if(findLike == null) { return 0; } 
 		  else { return 1; } 
 		  
 	  }
-//	  
-//	  public int saveLike(Long camp_id, Long id) { 
-//		  Optional<Wishlist> findLike =  likeRepository.findByCampingAndId(camp_id, id);
-//		  System.out.println(findLike.isEmpty());
-//		  
-//		  if(findLike.isEmpty()) { 
-//			  Member member = memberRepository.findById(id).get();
-//			  Camping camping = campRepository.findById(camp_id).get();
-//			  Wishlist like = Wishlist.toWishlist(member,camping);
-//			  likeRepository.save(like); 
-//			  //CampingRepository.plusLike(camp_id); 
-//			  return 1; 
-//			  }
-//	  
-//		  else { 
-//			 likeRepository.deleteByCampingAndId(camp_id, id);
-//			 //CampingRepository.minusLike(camp_id); 
-//			 return 0; 
-//		  }
-//		  
-//	  }
+	
+	  // 좋아요
+		@Transactional
+		public int saveLike(Wishlist wishlist) {
+			
+			 Wishlist findLike = likeRepository.findByLike(wishlist.getCamping().getCamp_id(), wishlist.getId().getId());
+		
+			 if(findLike == null) {
+				 Camping c= campRepository.findById(wishlist.getCamping().getCamp_id()).get();
+				 c.setLikeCnt(c.getLikeCnt()+1);  // 좋아요 개수 1증가
+				 likeRepository.save(wishlist);
+				
+				 return 1;
+			 }
+			 else {
+				 Camping c = campRepository.findById(wishlist.getCamping().getCamp_id()).get();
+				 c.setLikeCnt(c.getLikeCnt()-1);
+				 likeRepository.delete(findLike);
+				 return 0;
+			 }
+				
+		}
+		
+		// 캠핑장 인기 순
+		public List<Camping> campLike(){
+			return campRepository.campLike();
+		}
+
+
 
 }

@@ -26,7 +26,7 @@ public class Picture {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pic_num;  // 사진 식별 번호
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="camp_id")
 	@JsonIgnore
 	private Camping camping;  

@@ -1,6 +1,9 @@
 package com.example.camping.service;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,15 @@ public class ReviewService {
 	// 댓글 상세보기
 	public Review detail(Long reviewNum) {
 		return reviewRepository.findById(reviewNum).get();
+	}
+	
+	// 댓글 수정
+	@Transactional
+	public void update(Review review) {
+		Review r = reviewRepository.findById(review.getReviewNum()).get();
+		r.setContent(review.getContent());
+		r.setScore(review.getScore());
+		r.setReviewDate(new Date());
 	}
 	
 }

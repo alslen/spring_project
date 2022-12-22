@@ -3,6 +3,9 @@ package com.example.camping.controller;
 import java.security.Principal;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,12 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.camping.config.auth.PrincipalMember;
 import com.example.camping.model.Camping;
 import com.example.camping.model.Picture;
 import com.example.camping.model.WishListDTO;
 import com.example.camping.model.Wishlist;
+import com.example.camping.repository.CampingRepository;
 import com.example.camping.service.CampingService;
 import com.example.camping.service.LikeService;
 import com.example.camping.service.PictureService;
@@ -31,7 +36,10 @@ public class CampingCtroller {
 	private CampingService campService;
 	
 	@Autowired
-	private LikeService likeService;
+	private CampingRepository campRepository;
+	
+	@Autowired
+	private PictureService picService;
 	
 	@GetMapping("/")
 	public String list() {
@@ -55,6 +63,7 @@ public class CampingCtroller {
 	public String list(Model model) {
 		List<Camping> campings = campService.list();
 		model.addAttribute("clist", campings);
+		model.addAttribute("likeList", campService.campLike());
 		//model.addAttribute(pi, model)
 		return "/camping/CampingList";
 	}
@@ -85,11 +94,16 @@ public class CampingCtroller {
 		
 		// 캠핑장 상세보기
 		@GetMapping("/detail/{camp_id}")
-		public String detail(@PathVariable Long camp_id,Model model, @AuthenticationPrincipal PrincipalMember principal) {
+		public String detail(@PathVariable Long camp_id,Model model, @AuthenticationPrincipal PrincipalMember principal, HttpSession session) {
 			Camping camp = campService.detail(camp_id);
 			model.addAttribute("camp", camp);
 			
-//			// id값 가져오기
+			// id값 가져오기
+			if(principal == null) {
+				return "/camping/campDetail";
+			}
+			//Long id = (Long) session.getAttribute("Member");
+			
 			Long id = principal.getMember().getId();
 			int like = campService.findLike(camp_id, id);
 			model.addAttribute("like", like);
@@ -108,9 +122,19 @@ public class CampingCtroller {
 		// 좋아요를 클릭했을 때 insert
 		@PostMapping("/camping/like")
 		@ResponseBody
-		public String like(Wishlist wishlist) {
-			campService.saveLike(wishlist);
-			return "success";
+		public int like(Wishlist wishlist) {
+
+			int result = campService.saveLike(wishlist);
+			 
+			return result;
+		}
+		
+		// 좋아요 개수
+		@GetMapping("/camping/likeCnt/{camp_id}")
+		@ResponseBody
+		public int likeCnt(@PathVariable Long camp_id) {
+			Camping c = campRepository.findById(camp_id).get();
+			return c.getLikeCnt();
 		}
 				
 		// 캠핑장 삭제
@@ -123,16 +147,23 @@ public class CampingCtroller {
 		
 		// 캠핑장 수정 폼
 		@GetMapping("/camping/update/{camp_id}")
-		public String update(@PathVariable Long camp_id, Model model) {
+		public String update(@PathVariable Long camp_id, Model model, HttpServletRequest request) {
+			
 			model.addAttribute("camp",campService.detail(camp_id)) ;
 			return "/camping/campUpdate";
 		}
 		
 		// 캠핑장 수정
-		@PutMapping("/camping/update")
-		@ResponseBody
-		public String update(@RequestBody Camping camping) {
+		@PostMapping("/camping/update")
+		public String update(Camping camping, HttpServletRequest request) {
 			campService.update(camping);
-			return "success";
+			return "redirect:/list";
 		}
+		
+//		// 캠핑장 인기 순(좋아요가 많은 순으로 내림차순)
+//		@GetMapping("/camping/campLike")
+//		public String campLike(Model model) {
+//			model.addAttribute("likeList", campService.campLike());
+//			return "/camping/campLike";
+//		}
 }

@@ -2,30 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/includes/header.jsp"%>
 
-<script>
-    var index = 0;   //이미지에 접근하는 인덱스
-    window.onload = function(){
-        slideShow();
-    }
-    
-    function slideShow() {
-    var i;
-    var j=1;
-    const images = document.querySelectorAll(".img[data-src='1']");  //slide1에 대한 dom 참조
-    for (i = 0; i <images.length; i++) {
-    	images[i].classList.remove('on');   //처음에 전부 display를 none으로 한다.
-    }
-    index++;
-    if (index > images.length) {
-        index = 1;  //인덱스가 초과되면 1로 변경
-    }   
-    images[index-1].classList.add('on');  //해당 인덱스는 block으로
-    setTimeout(slideShow, 4000);   //함수를 4초마다 호출
- 
-}
-
-</script>
-
         <div class="contianer">
         <div class="bg-light">
         	<div class="row pt-5">

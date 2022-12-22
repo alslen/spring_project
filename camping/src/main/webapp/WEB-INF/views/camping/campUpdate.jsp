@@ -7,7 +7,7 @@
 <div class="container">
 	<div class="content">
 	<h3 align = "center" style="color:#ffc107; margin-top:50px;">캠핑장 수정</h3>
-	<form action="/insert" method="post" enctype="multipart/form-data" id="frm">
+	<form action="/camping/update" method="post" enctype="multipart/form-data" id="frm">
 	<input type="hidden" name="camp_id" id="camp_id" value="${camp.camp_id }">
 	<div class="form-group  mt-5 mb-3">
 		<label for="campTitle">캠핑장 명칭:</label>
@@ -42,7 +42,10 @@
 		<textarea rows="3" cols="50" name="room_info" id="room_info" class="form-control">${camp.room_info}</textarea>
 	</div>
 	<div class="form-group mb-3">
-		<label for="upload">캠핑장 사진:</label>
+		<label for="upload">캠핑장 사진:</label><br>
+		<c:forEach items="${camp.picture}" var="pic">
+			${pic.pic_name}<a href="javascript:picDelete(${pic.pic_num})"><img src="/img/x_icon.png"></a><br>
+		</c:forEach>
 		<input multiple="multiple" type="file" class="form-control" id="upload" name="upload[]" placeholder="Enter File"/><br>
 	</div>
 	<div class="form-group mb-3">
@@ -52,44 +55,28 @@
 		<input type="radio" name="camp_category" value="3">캠핑장
 	</div>
 	<div class="d-grid gap-2" >
-		<button type="button" class="btn btn-outline-warning btn-block" id="updateBtn">수정하기</button>
+		<input type="submit" class="btn btn-outline-warning btn-block" id="updateBtn" value="수정하기">
 	</div>
 	</form>
 	</div>
 </div>
 
 <script>
+
+// 사진 삭제
+function picDelete(pic_num){
+	$.ajax({
+		type:'delete',
+		url:'/picture/delete/'+pic_num
+	})
+	.done(function(resp){
+		location.href="/camping/update/${camp_id}";
+	})
+}
 // 라디오 버튼 값 셋팅
 $('input[name="camp_category"]').val(['${camp.camp_category}']);
 
-$("#updateBtn").click(function(){
-	if(!confirm('정말 수정하시겠습니까?')) return false;
-	var data = {
-			"camp_id" : $("#camp_id").val(),
-			"camp_title" : $("#camp_title").val(),
-			"camp_tel" : $("#camp_tel").val(),
-			"address" : $("#address").val(),
-			"count" : $("#count").val(),
-			"price" : $("#price").val(),
-			"camp_email" : $("#camp_email").val(),
-			"master" : $("#master").val(),
-			"room_info" : $("#room_info").val(),
-			"camp_category" : $('input[name="camp_category"]:checked').val()
-	}
-	$.ajax({
-		type:'put',
-		url:'/camping/update',
-		contentType:'application/json;charset=utf-8',
-		data:JSON.stringify(data),
-		success:function(resp){
-			alert("수정 되었습니다.")
-			location.href="/list"
-		},
-		error:function(e){
-			alert("수정을 실패하였습니다.")
-		}
-	})
-})  // updateBtn
+
 </script>
 
     

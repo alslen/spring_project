@@ -1,6 +1,8 @@
 package com.example.camping.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,5 +51,25 @@ public class MemberService {
 	@Transactional
 	public void delete(Long id) {
 		memberRepository.deleteById(id);
+	}
+	
+	public Page<Member> findAll(String field, String word, Pageable pageable) {
+		Page<Member> lists = memberRepository.findAll(pageable);
+		if(field.equals("username")) {
+			lists = memberRepository.findByUsername(word, pageable);
+		}else if(field.equals("phone")) {
+			lists = memberRepository.findByPhone(word, pageable);
+		}
+		return lists;
+	}
+	//검색 카운트
+	public Long count (String field, String word) {
+		Long count = memberRepository.count();
+		if(field.equals("username")) {
+			count = memberRepository.cntUsername(word);
+		}else if(field.equals("phone")) {
+			count = memberRepository.cntPhone(word);
+		}
+		return count;
 	}
 }

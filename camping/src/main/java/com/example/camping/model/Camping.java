@@ -1,15 +1,13 @@
 package com.example.camping.model;
 
-import java.util.Date;
-
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -20,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,19 +38,23 @@ public class Camping {
 	private Long price;
 	private String room_info;  // 객실정보
 	
+	private int likeCnt;  // 좋아요 개수
+	
 	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("camping")
 	@JsonIgnore
 	private List<Review> review;
 	
-	@OneToMany(mappedBy = "camping")
+	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private List<Wishlist> wishList;
 	
 	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
 	private List<Picture> picture;
 	
-	@OneToOne(mappedBy = "camping")
-	private Booking booking;
+	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private List<Booking> booking;
 	
 	@Transient  // 컬럼에서 제외됨
 	private List<MultipartFile> upload;  // 업로드할 파일

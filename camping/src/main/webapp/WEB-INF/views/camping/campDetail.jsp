@@ -62,61 +62,30 @@ $(document).ready(function(){
 <div class="container mt-5 mb-5">
 <input type="hidden" name="camp_id" id="camp_id" value="${camp.camp_id}">
 <div class="oneLine">
-	<h2 style="font-weight:bold;">${camp.camp_title}</h2>
-	<c:if test="${like==0}">
-	<a class="text-dark" style="text-decoration-line: none;" id="like_check">
-		<img id="likeImg" src="/img/heart-fill.png"><span id="likeCnt"></span>
-	</a>
-	</c:if>
-	<c:if test="${like==1 }">
-	<a class="text-dark" style="text-decoration-line: none;" id="like_check">
-		<img id="likeImg" src="/img/heart.png"><span id="likeCnt"></span>
-	</a>
-	</c:if>
+	<h2 style="font-weight:bold; text-align:left">${camp.camp_title}</h2>
+	<div style="text-align:right;">
+	
+		<c:if test="${principal.username==null }">
+			<a class="text-dark" style="text-decoration-line: none;" id="like_check">
+				<img id="likeImg" src="/img/heart-fill.png">
+			</a>
+		</c:if>
+		<c:if test="${like==0}">
+			<a class="text-dark" style="text-decoration-line: none;" id="like_check">
+				<img id="likeImg" src="/img/heart-fill.png">
+			</a>
+		</c:if>
+		<c:if test="${like==1}">
+			<a class="text-dark" style="text-decoration-line: none;" id="like_check">
+				<img id="likeImg" src="/img/heart.png">
+			</a>
+		</c:if>
+		<span id="likeCnt">${camp.likeCnt }</span>
+	</div>
 </div>
 <hr>
-<script>
-//좋아요 버튼을 클릭 시 실행되는 코드
-  let likeVal = document.getElementById('like_check').value
-  const boardId = $("#boardId").val();
-  const memberId = $("#memberId").val();
-  console.log(memberId);
-   console.log(likeVal);
-   const likeImg = document.getElementById("likeImg")
-
-    if (likeVal > 0) {
-       likeImg.src = "/img/heart.png";
-       } else {
-            likeImg.src = "/img/heart-fill.png";
-       }
-        
-$("#likeImg").on("click", function () {
-	if(${principal.username == null}){
-		alert("로그인을 해주세요")
-		return;
-	}
-	var count = 0;
-    $.ajax({
-        url: '/camping/like',
-        type: 'post',
-        data: {'camping': ${camp.camp_id}, 'id': ${principal.member.id}},
-        success: function (data) {
-            if (data == "success") {
-                $("#likeImg").attr("src", "/img/heart.png");
-
-            } else {
-                $("#likeImg").attr("src", "/img/heart-fill.png");
-            }
-        }, error: function () {
-            console.log('오타 찾으세요')
-        }
-
-    });  // ajax
-});  // likeImg
-
-</script>
 	<div style="float:left; width:50%" >
-	<div id="demo" class="carousel mt-3" data-bs-ride="carousel" style="">
+	<div id="demo" class="carousel mt-3" data-bs-ride="carousel">
 	  	<!-- Indicators/dots -->
 	  	<div class="carousel-indicators">
 		<c:forEach var="pic" items="${camp.picture}" varStatus="i">
@@ -127,8 +96,8 @@ $("#likeImg").on("click", function () {
 	    <!-- The slideshow/carousel -->
 		<div class="carousel-inner">
 		    <c:forEach var="pic" items="${camp.picture}" varStatus="i">
-				<div class="carousel-item  <c:if test="${i.index == 0}">active</c:if>">
-		        	<img class="top-img rounded d-block w-100" src="/image/${pic.pic_name}" style="object-fit: cover;">
+				<div class="carousel-item  <c:if test="${i.index == 0}">active</c:if>" style="width:500px; height:370px;">
+		        	<img class="top-img rounded d-block w-100" src="/image/${pic.pic_name}" style="object-fit: cover; width:500px; height:100%;">
 		        </div>
 			</c:forEach>
 		</div>
@@ -143,7 +112,7 @@ $("#likeImg").on("click", function () {
 	</div>
 	</div>
 
-	<div style="float:right; margin-right:10%; margin-bottom:300px;">
+	<div style="float:right; width:500PX; position: relative; top:40px;padding:20px; border: 1px solid gray;">
 		<table class="table table-borderless medium_text" style="text-align: center; font-size:14px;">
 			<tr>
 				<td><strong>주소</strong></td>
@@ -166,59 +135,21 @@ $("#likeImg").on("click", function () {
 				<td>${camp.price}원</td>
 			</tr>
 		</table>
-			
+		<button  class="btn btn-outline-warning btn-block" id ="btnReserve" onclick="show();">예약하기</button>	
 	</div>
 </div>
 
 <div class="container" >
-  <ul class="tabs" style="margin-top:400px;">
-    <li class="tab-link current" data-tab="tab-1">소개</li>
-    <li class="tab-link" data-tab="tab-2">숙소위치</li>
+  <ul class="tabs" style="margin-top:430px;">
+    <li class="tab-link current" data-tab="tab-1">숙소위치</li>
+    <li class="tab-link" data-tab="tab-2">소개</li>
     <li class="tab-link" data-tab="tab-3">리뷰</li>
   </ul>
-  	<div id="tab-1" class="tab-content current">${camp.room_info }</div>
-  	<div id="tab-2" class="tab-content">
-  	주소 : ${camp.address}
-	<div id="map" style="width:100%;height:350px;"></div>
-<script>
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };  
-
-// 지도를 생성합니다    
-var map = new kakao.maps.Map(mapContainer, mapOption); 
-
-// 주소-좌표 변환 객체를 생성합니다
-var geocoder = new kakao.maps.services.Geocoder();
-
-// 주소로 좌표를 검색합니다
-geocoder.addressSearch('${camp.address}', function(result, status) {
-
-    // 정상적으로 검색이 완료됐으면 
-     if (status === kakao.maps.services.Status.OK) {
-
-        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: coords
-        });
-
-        // 인포윈도우로 장소에 대한 설명을 표시합니다
-        var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width:150px;text-align:center;padding:6px 0;">캠핑장 위치</div>'
-        });
-        infowindow.open(map, marker);
-
-        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-        map.setCenter(coords);
-    } 
-});    
-</script>
- </div>
+  	<div id="tab-1" class="tab-content current">
+  		주소 : ${camp.address}
+		<div id="map" style="width:100%;height:350px;"></div>
+  	</div>
+  	<div id="tab-2" class="tab-content">${camp.room_info }</div>
   
   <div id="tab-3" class="tab-content">
   		<div class="container" >
@@ -263,7 +194,92 @@ geocoder.addressSearch('${camp.address}', function(result, status) {
 
 <script>
 
+/* // 예약하기 버튼
+$("#btnReserve").click(function(){
+	
+	var data = {
+			"camp_id":${camp.camp_id},
+			"address":${camp.address},
+			"camp_tel":${camp.camp_tel}
+	}
+	
+	$.ajax({
+		type:'post',
+		url:'/booking/book/${camp.camp_id}',
+		contentType:"application/json;charset=utf-8",
+		data:JSON.stringify(data),
+		success:function(resp){
+			
+		}
+		
+	})
+})  // btnComment
+ */
+ 
+//좋아요 버튼을 클릭 시 실행되는 코드
+$("#likeImg").on("click", function () {
+	
+    $.ajax({
+        url: '/camping/like',
+        type: 'post',
+        data:{'camping': ${camp.camp_id}, 'id': ${principal.member.id}},
+        success: function (resp) {
+            if (resp == 1) {
+                $("#likeImg").attr("src", "/img/heart.png");
+            } else{
+                $("#likeImg").attr("src", "/img/heart-fill.png");
+            }
+            like();
+            //$("#likeCnt").html(${camp.likeCnt});
+        }, error: function () {
+            console.log('오타 찾으세요')
+        }
 
+    });  // ajax
+});  // likeImg
+
+var like = function(){
+	$.ajax({
+		type:'get',
+		url:"/camping/likeCnt/${camp_id}"
+	})  // ajax
+	.done(function(resp){
+		$("#likeCnt").text(resp);
+	})  // done
+}
+
+like();
+
+// 지도 생성
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch('${camp.address}', function(result, status) {
+    // 정상적으로 검색이 완료됐으면 
+     if (status === kakao.maps.services.Status.OK) {
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">캠핑장 위치</div>'
+        });
+        infowindow.open(map, marker);
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});    
 
 // 캠핑장 수정
 $("#btnUpdate").click(function(){
@@ -351,8 +367,8 @@ var init = function(){
 			str += val.content
 			if("${principal.member.id}"== val.member.id) {
 				str += "<br><div style='text-align:right'>"
-				str += "<a href='javascript:fupdate("+val.reviewNum+")'>수정</a> | "
-				str += "<a href='javascript:fdel("+val.reviewNum+")'>삭제</a></td>"
+				//str += "<button type='button' class='btn btn-info' onclick='commentUpdate("+val.reviewNum,val.content+")'>댓글수정</button> "
+				str += "<button type='button' class='btn btn-info' onclick='commentDelete("+val.reviewNum+")'>댓글삭제</button>"
 				str += "</div>"
 			}
 			
@@ -364,8 +380,10 @@ var init = function(){
 }  // init
 
 // 댓글 삭제
-function fdel(reviewNum){
+
+function commentDelete(reviewNum){
 	if(!confirm('정말 삭제하시겠습니까?')) return false;
+	
 	$.ajax({
 		type:'delete',
 		url:'/review/delete/'+reviewNum
@@ -377,18 +395,22 @@ function fdel(reviewNum){
 	.fail(function(e){
 		alert("댓글 삭제 실패")
 	})
-}  //fdel 
-
-// 댓글 수정폼
-function fupdate(reviewNum){
-	var htmls = "";
-
-	htmls += '<textarea name="editContent" id="editContent" class="form-control" rows="3">';
-	htmls += '</textarea>';
-
 }
-
+	
+// 댓글 수정폼
+/* function commentUpdate(reviewNum,content){
+	var str = "";
+	str += "<div>"
+	str += "<textarea class='col-auto form-control' type='text' id='msg'>content</textarea>"
+	str += "</div>"
+}
+ */
 init();
+ 
+	let openWin;
+	function show(){
+	 		window.open("/full-calendar/calendar/${camp_id}","calendar","width=700,height=600,top10,left=10")
+		}
 </script>
 
 

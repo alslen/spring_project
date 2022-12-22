@@ -70,18 +70,14 @@
                             </ul>
                      	</li>
                      </ul>
-                     </div>
-                     </sec:authorize>
-                     
-                        <!-- 관리자만 볼 수 있는 메뉴 -->
-                 <sec:authorize access="isAuthenticated()">
+                    <!-- 관리자만 볼 수 있는 메뉴 -->
                  <c:if test="${principal.member.role == 'ROLE_ADMIN' }">
                  <div class="collapse navbar-collapse  " id="navbarSupportedContent" >
                      <ul class="navbar-nav "> 
                      	<li class="nav-item dropdown ">
                      		<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" >관리자</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="">회원목록</a></li>
+                                <li><a class="dropdown-item" href="/memberList">회원목록</a></li>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="/insert">캠핑장 등록</a></li>
                                 <li><a class="dropdown-item" href="/insert">예약 목록</a></li>
@@ -90,7 +86,11 @@
                      </ul>
                      </div>
                      </c:if>
+                     
+                     </div>
                      </sec:authorize>
+                     
+                
                      
                      </div>
                      </div>

@@ -1,5 +1,6 @@
 package com.example.camping.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,7 +17,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-public class Member {
+public class Member  implements Serializable{
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -37,6 +38,7 @@ public class Member {
 	@OneToMany(mappedBy = "member")
 	private List<Booking> booking;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "id")
 	private List<Wishlist> wishList;
 }
