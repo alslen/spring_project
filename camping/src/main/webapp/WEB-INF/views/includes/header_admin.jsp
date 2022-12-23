@@ -38,7 +38,7 @@
         <!------------------로그인 전 화면---------------------->
         <nav class="navbar navbar-expand-lg navbar-light ">
             <div class="container  px-4 px-lg-5 mr-auto">
-            <a href="/"><img src="../img/logo2.jpg" height="40" width="40" alt="My Image" style="margin-right:10px"></a>
+            <a href="/"><img src="/img/logo2.jpg" height="40" width="40" alt="My Image" style="margin-right:10px"></a>
                 <a class="navbar-brand" href="/">Camping Go</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse  " id="navbarSupportedContent" >
@@ -76,11 +76,10 @@
                      	<li class="nav-item dropdown ">
                      		<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" >관리자</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="">회원목록</a></li>
+                                <li><a class="dropdown-item" href="/memberList">회원목록</a></li>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="/insert">캠핑장 등록</a></li>
-                                <li><a class="dropdown-item" href="/">예약 목록</a></li>
-                                <li><a class="dropdown-item" href="/memberList">회원 목록</a></li>
+                                <li><a class="dropdown-item" href="/booking/adminList">예약 목록</a></li>
                             </ul>
                      	</li>
                      </ul>

@@ -1,5 +1,6 @@
 package com.example.camping.model;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,8 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,6 +44,10 @@ public class Camping {
 	
 	private int likeCnt;  // 좋아요 개수
 	
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date reg_date;  // 등록날짜
+	
 	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("camping")
 	@JsonIgnore
@@ -53,7 +61,6 @@ public class Camping {
 	private List<Picture> picture;
 	
 	@OneToMany(mappedBy = "camping", cascade = CascadeType.REMOVE)
-	@JsonIgnore
 	private List<Booking> booking;
 	
 	@Transient  // 컬럼에서 제외됨

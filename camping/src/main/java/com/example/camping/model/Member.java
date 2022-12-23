@@ -3,6 +3,7 @@ package com.example.camping.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,13 +33,14 @@ public class Member  implements Serializable{
 	private String role;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
 	private List<Review> review;
 	
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private List<Booking> booking;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "id")
+	@OneToMany(mappedBy = "id", cascade = CascadeType.REMOVE)
 	private List<Wishlist> wishList;
 }

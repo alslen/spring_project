@@ -2,14 +2,16 @@ package com.example.camping.model;
 
 import java.util.Date;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,16 +27,23 @@ public class Booking {
 	
 	@ManyToOne
 	@JoinColumn(name="member_id")
+	@JsonIgnore
 	private Member member;  // 고객 참조
 	
 	@ManyToOne
 	@JoinColumn(name="camping_id")
+	@JsonIgnore
 	private Camping camping;  
 	
-	// 예약 상태(1:예약 완료, 2: 취소 완료, 3:입실완료, 4:이용완료)
+	// 예약 상태(0:예약 대기, 1:예약 완료, 2: 예액 취소, 3:입실완료, 4:이용완료)
 	private Long status;  
 	
-	@ManyToOne
-	@JoinColumn(name="pay_code")
-	private Pay pay;
+//	@ManyToOne
+//	@JoinColumn(name="pay_code")
+//	private Pay pay;
+	
+	@PrePersist
+	public void prePerist() {
+		this.status = this.status==null?0:this.status;
+	}
 }

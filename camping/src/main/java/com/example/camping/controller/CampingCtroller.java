@@ -27,6 +27,7 @@ import com.example.camping.model.Wishlist;
 import com.example.camping.repository.CampingRepository;
 import com.example.camping.service.CampingService;
 import com.example.camping.service.LikeService;
+import com.example.camping.service.MemberService;
 import com.example.camping.service.PictureService;
 
 @Controller
@@ -40,6 +41,7 @@ public class CampingCtroller {
 	
 	@Autowired
 	private PictureService picService;
+	
 	
 	@GetMapping("/")
 	public String list() {
@@ -64,7 +66,7 @@ public class CampingCtroller {
 		List<Camping> campings = campService.list();
 		model.addAttribute("clist", campings);
 		model.addAttribute("likeList", campService.campLike());
-		//model.addAttribute(pi, model)
+		model.addAttribute("campNew", campService.campNew());
 		return "/camping/CampingList";
 	}
 	

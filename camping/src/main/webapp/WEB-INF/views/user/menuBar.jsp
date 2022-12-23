@@ -94,7 +94,7 @@ $("li.group").eq(n).find("ul").show();
         <li class="group">
             <div class="title">예약사이트</div>
             <ul class="sub">
-                <li><a href="#">예약정보</a></li>                
+                <li><a href="/booking/bookList/${principal.member.id}">예약정보</a></li>                
             </ul>
         </li>        
     </ul>

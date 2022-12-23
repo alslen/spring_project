@@ -135,7 +135,7 @@ $(document).ready(function(){
 				<td>${camp.price}원</td>
 			</tr>
 		</table>
-		<button  class="btn btn-outline-warning btn-block" id ="btnReserve" onclick="show();">예약하기</button>	
+		<button  type="button" class="btn btn-outline-warning btn-block" id ="btnReserve">예약하기</button>	
 	</div>
 </div>
 
@@ -193,32 +193,18 @@ $(document).ready(function(){
 </div>
 
 <script>
-
-/* // 예약하기 버튼
 $("#btnReserve").click(function(){
-	
-	var data = {
-			"camp_id":${camp.camp_id},
-			"address":${camp.address},
-			"camp_tel":${camp.camp_tel}
+	if("${principal.member.id}" == null){
+		alert('로그인을 해주세요.')
 	}
 	
-	$.ajax({
-		type:'post',
-		url:'/booking/book/${camp.camp_id}',
-		contentType:"application/json;charset=utf-8",
-		data:JSON.stringify(data),
-		success:function(resp){
-			
-		}
-		
-	})
-})  // btnComment
- */
+	location.href="/booking/book/${camp.camp_id}";
+})
+
+ 
  
 //좋아요 버튼을 클릭 시 실행되는 코드
 $("#likeImg").on("click", function () {
-	
     $.ajax({
         url: '/camping/like',
         type: 'post',
@@ -407,10 +393,10 @@ function commentDelete(reviewNum){
  */
 init();
  
-	let openWin;
-	function show(){
-	 		window.open("/full-calendar/calendar/${camp_id}","calendar","width=700,height=600,top10,left=10")
-		}
+	//let openWin;
+	//function show(){
+	 		//window.open("/full-calendar/calendar/${camp_id}","calendar","width=700,height=600,top10,left=10")
+		//}
 </script>
 
 

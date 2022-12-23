@@ -66,7 +66,6 @@
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="booking">예약정보</a></li>
                                 <li><a class="dropdown-item" href="/logout">로그아웃(<sec:authentication property="principal.member.username" />)</a></li>
-                                <li><a class="dropdown-item" href="#!">고객센터</a></li>
                             </ul>
                      	</li>
                      </ul>
@@ -80,7 +79,7 @@
                                 <li><a class="dropdown-item" href="/memberList">회원목록</a></li>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="/insert">캠핑장 등록</a></li>
-                                <li><a class="dropdown-item" href="/insert">예약 목록</a></li>
+                                <li><a class="dropdown-item" href="/booking/adminList">예약 목록</a></li>
                             </ul>
                      	</li>
                      </ul>

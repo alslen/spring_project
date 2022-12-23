@@ -12,4 +12,7 @@ public interface CampingRepository extends JpaRepository<Camping, Long>{
 
 	@Query(value="select * from camping order by like_cnt desc", nativeQuery = true)
 	public List<Camping> campLike();
+	
+	@Query(value="select * from camping order by reg_date desc", nativeQuery = true)
+	public List<Camping> campNew();
 }

@@ -148,6 +148,17 @@ public class CampingService {
 		public List<Camping> campLike(){
 			return campRepository.campLike();
 		}
+		
+		// 캠핑장 최신 순
+		public List<Camping> campNew(){
+			return campRepository.campNew();
+		}
+		
+		//캠핑 아이디
+        public Camping findById(Long camp_id) {
+           Camping camping = campRepository.findById(camp_id).get();
+           return camping;
+        }
 
 
 
