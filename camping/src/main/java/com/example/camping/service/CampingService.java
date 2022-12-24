@@ -159,6 +159,12 @@ public class CampingService {
            Camping camping = campRepository.findById(camp_id).get();
            return camping;
         }
+        
+      //검색
+    	public List<Camping> search(String address,String camp_title){
+    		List<Camping> lists = campRepository.Search(address,camp_title);
+    		return lists;
+    	}
 
 
 

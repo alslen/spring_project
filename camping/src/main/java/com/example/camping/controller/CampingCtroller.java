@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.camping.config.auth.PrincipalMember;
+import com.example.camping.dto.BookCampDTO;
 import com.example.camping.model.Camping;
 import com.example.camping.model.Picture;
 import com.example.camping.model.WishListDTO;
@@ -39,13 +40,18 @@ public class CampingCtroller {
 	@Autowired
 	private CampingRepository campRepository;
 	
-	@Autowired
-	private PictureService picService;
-	
 	
 	@GetMapping("/")
 	public String list() {
-		return "redirect:/list";
+		return "redirect:/main";
+	}
+	@GetMapping("main") 
+	public String main(Model model) {
+		List<Camping> campings = campService.list();
+		model.addAttribute("clist", campings);
+		model.addAttribute("likeList", campService.campLike());
+		model.addAttribute("campNew", campService.campNew());
+		return "/camping/mainpage";
 	}
 	
 	// 캠핑장 추가폼
@@ -58,7 +64,7 @@ public class CampingCtroller {
 	@PostMapping("insert")
 	public String insert(Camping camp) {
 		campService.insert(camp);
-		return "redirect:/list";
+		return "redirect:/main";
 	}
 	// 전체list
 	@GetMapping("list")
@@ -147,6 +153,17 @@ public class CampingCtroller {
 			return "success";
 		}
 		
+		//검색
+		@PostMapping("search")//제이쿼리 데이터로 받아왔을 때 DTO로 사용했었음
+		public String search(Model model, BookCampDTO bookCapmdto ) {
+			String address = bookCapmdto.getAddress();
+			//System.out.println("address :"+bookCapmdto.getAddress());
+			String camp_title = bookCapmdto.getCamp_title();
+			List<Camping> lists = campService.search(address,camp_title);
+			model.addAttribute("search",lists);
+			return "/board/search";
+		}
+		
 		// 캠핑장 수정 폼
 		@GetMapping("/camping/update/{camp_id}")
 		public String update(@PathVariable Long camp_id, Model model, HttpServletRequest request) {
@@ -160,6 +177,13 @@ public class CampingCtroller {
 		public String update(Camping camping, HttpServletRequest request) {
 			campService.update(camping);
 			return "redirect:/list";
+		}
+		
+		//likelist.jsp로 
+		@GetMapping("/likelist")
+		public String likelist(Model model) {
+			model.addAttribute("likeList", campService.campLike());
+			return "/camping/CampLike";
 		}
 		
 //		// 캠핑장 인기 순(좋아요가 많은 순으로 내림차순)

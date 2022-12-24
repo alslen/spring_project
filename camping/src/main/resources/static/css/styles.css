@@ -96,18 +96,58 @@ footer {
 	color:#adb5bd;
 	padding-top: 50px;
 	padding-bottom: 40px;
+	display: block;
 }
 .content
  {
     margin: 0 auto;
-    max-width: calc(100% - 4em);
-    width: 50em;
+    width: 800px;
     margin-top: 50px;
     padding-top: 10px;
     padding-bottom: 50px;
     padding-left: 100px;
     padding-right: 100px;
     border: 1px solid gray;
+}
+.con {
+	width: 100%;
+ 	padding-right: var(--bs-gutter-x, 0.75rem);
+ 	padding-left: var(--bs-gutter-x, 0.75rem);
+ 	margin-right: auto;
+ 	margin-left: auto;
+}
+.listcontent
+{
+	margin: 0 auto;
+    max-width: calc(100% - 4em);
+    width: 70em;
+}
+#myBtn{
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    z-index: 100;
+    text-decoration: none;
+    font-size: 15px;
+    cursor: pointer;
+    width:70px; 
+    height:70px; 
+    text-align:center; 
+    border: 4px solid #ffa806;
+    background-color:#ffa806;
+    color:#fff;
+}
+#btnmUpdate {
+	width:275px;
+	height:60px;
+}
+#btnBack {
+	width:275px;
+	height:60px;
+}
+.btninline {
+	display:inline-block;
+	padding:10px;
 }
 hr {
   margin: 1rem 0;
@@ -356,7 +396,37 @@ label {
 button {
   border-radius: 0;
 }
-
+#grid_header{
+    margin: 0 auto;
+    width: 90em;
+    padding-top: 20px;
+    display: grid; 
+    text-align:right;
+    float:right;
+}
+.logo {
+	float:left;
+}
+#grid_header a {
+    text-decoration: none;
+    color: black;
+}
+#grid_header ul li {
+    list-style: none;
+    padding: 0 11px;
+    float:right;
+}
+#grid_header li {
+	float:left;
+}
+.header_top {
+    font-size: 15px;
+    padding-left: 65%;
+}
+.btnCamp {
+	background-color:#ffa806 !important;
+	color: #fff !important;
+}
 button:focus:not(:focus-visible) {
   outline: 0;
 }
@@ -4563,6 +4633,7 @@ textarea.form-control-lg {
 
 .card-body {
   flex: 1 1 auto;
+  height: 140px;
   padding: 1rem 1rem;
 }
 

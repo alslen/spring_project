@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
        
 <%@ include file="../includes/header.jsp"%>
+<%@ include file="/WEB-INF/views/user/menuBar.jsp"%>
 <link href="/css/score.css" rel="stylesheet">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4eeebc573cb6c8b6d05d232c6bf107d1&libraries=services"></script>
 
@@ -37,10 +38,6 @@ textarea {
 	border:1px solid gray;
 }
 
-.oneLine h2,
-.onneLine a {
-	display: inline;
-}
 </style>
 
 <script>
@@ -61,10 +58,13 @@ $(document).ready(function(){
 
 <div class="container mt-5 mb-5">
 <input type="hidden" name="camp_id" id="camp_id" value="${camp.camp_id}">
-<div class="oneLine">
-	<h2 style="font-weight:bold; text-align:left">${camp.camp_title}</h2>
-	<div style="text-align:right;">
+
+	<div style="line-height:55px;">
+		<div style="float:left; vertical-align:middle; margin-top:10px;">
+			<h2 style="font-weight:bold;">${camp.camp_title}</h2>
+	</div>
 	
+	<div style="text-align:right; float:right; vertical-align:middle;">
 		<c:if test="${principal.username==null }">
 			<a class="text-dark" style="text-decoration-line: none;" id="like_check">
 				<img id="likeImg" src="/img/heart-fill.png">
@@ -83,8 +83,11 @@ $(document).ready(function(){
 		<span id="likeCnt">${camp.likeCnt }</span>
 	</div>
 </div>
+<div style="clear:both;"></div>
+
 <hr>
-	<div style="float:left; width:50%" >
+<div class="container">
+	<div style="float:left;" >
 	<div id="demo" class="carousel mt-3" data-bs-ride="carousel">
 	  	<!-- Indicators/dots -->
 	  	<div class="carousel-indicators">
@@ -103,16 +106,16 @@ $(document).ready(function(){
 		</div>
 	
 		<!-- Left and right controls/icons -->
-		<button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+		<button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev" style="float:left">
 			<span class="carousel-control-prev-icon"></span>
 		</button>
-		<button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+		<button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next" style="float:right">
 			<span class="carousel-control-next-icon"></span>
 		</button>
 	</div>
 	</div>
 
-	<div style="float:right; width:500PX; position: relative; top:40px;padding:20px; border: 1px solid gray;">
+	<div style="float:right; width:500px; position: relative; top:40px;padding:20px; border: 1px solid gray;">
 		<table class="table table-borderless medium_text" style="text-align: center; font-size:14px;">
 			<tr>
 				<td><strong>주소</strong></td>
@@ -137,6 +140,7 @@ $(document).ready(function(){
 		</table>
 		<button  type="button" class="btn btn-outline-warning btn-block" id ="btnReserve">예약하기</button>	
 	</div>
+</div>
 </div>
 
 <div class="container" >
@@ -173,7 +177,7 @@ $(document).ready(function(){
 	</div>
 	<br>
 	<div style="float:right">
-	<button style=" display: inline-block;" type="button" class="btn btn-info" id="btnComment">등록하기</button>
+	<button style=" display: inline-block;" type="button" class="btn btn-outline-warning btn-block" id="btnComment">등록하기</button>
 	</div>
 </form>		
 </sec:authorize>
@@ -186,8 +190,8 @@ $(document).ready(function(){
   <br>
   <c:if test="${principal.member.role == 'ROLE_ADMIN' }">
   <div>
-  	<button type="button" class="btn btn-info" id="btnUpdate">수정</button>
-  	<button type="button" class="btn btn-info" id="btnDelete">삭제</button>
+  	<button type="button" class="btn btnCamp" id="btnUpdate">수정</button>
+  	<button type="button" class="btn btnCamp" id="btnDelete">삭제</button>
   </div>
   </c:if>
 </div>
@@ -354,7 +358,7 @@ var init = function(){
 			if("${principal.member.id}"== val.member.id) {
 				str += "<br><div style='text-align:right'>"
 				//str += "<button type='button' class='btn btn-info' onclick='commentUpdate("+val.reviewNum,val.content+")'>댓글수정</button> "
-				str += "<button type='button' class='btn btn-info' onclick='commentDelete("+val.reviewNum+")'>댓글삭제</button>"
+				str += "<button type='button' class='btn btnCamp' onclick='commentDelete("+val.reviewNum+")'>댓글삭제</button>"
 				str += "</div>"
 			}
 			

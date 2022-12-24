@@ -25,6 +25,12 @@
 			<div class="d-grid gap-2">
 				<button type="button" class="btn btn-outline-warning btn-block"
 					id="btnlogin">로그인</button>
+				<c:if test="${access_token eq null}">
+				<a href="https://kauth.kakao.com/oauth/authorize?client_id=25e9068a898c848763a0508296b6cc0b&redirect_uri=http://localhost:7800/auth/kakao/callback&response_type=code">
+					<img src="/img/kakao_login_large_wide3.png" width="400"
+					alt="카카오 로그인 버튼" />
+				</a>
+				</c:if>
 			</div>
 		</form>
 	</div>

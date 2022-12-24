@@ -50,6 +50,9 @@ public class HomeController {
 	@GetMapping("/update/{id}")
 	public String update(@PathVariable Long id, Model model) {
 		model.addAttribute("mlist", memberService.findById(id));
+		model.addAttribute("myear", memberRepository.findByIdBirthYear(id));
+		model.addAttribute("mmonth", memberRepository.findByIdBirthMonth(id));
+		model.addAttribute("mday", memberRepository.findByIdBirthDay(id));
 		return "/user/update";
 	}
 	//회원정보수정
@@ -95,12 +98,17 @@ public class HomeController {
 		memberService.register(member);
 		return "success";
 	}
+	
 	@DeleteMapping("delete/{id}")
 	@ResponseBody
-	public String delete(@PathVariable Long id, HttpSession session) {
-		memberService.delete(id);
-		session.invalidate();
-		return "success";
+	public String delete(@PathVariable Long id, HttpSession session, @AuthenticationPrincipal PrincipalMember principal, String password) {
+		
+		if(encoder.matches(password, principal.getMember().getPassword())) {
+			memberService.delete(id);
+			session.invalidate();
+			return "success";
+		}
+		return "fail";
 	}
 	
 	//회원 리스트 전체보기 : 페이징, 검색

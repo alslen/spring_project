@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
     
 <style>
     body {
-        margin:20px auto;
+        margin: auto;
         padding: 0;
         font-family:"맑은 고딕";
-        font-size:0.9em;
+        font-size:0.8em;
 	}
 
     ul#navi {
-        width: 200px;
-        text-indent: 10px;
+        width: 150px;
 }
     ul#navi, ul#navi ul {
         margin:0;
@@ -44,6 +45,18 @@
     ul.sub li:hover {
         background:#cf0;
 }
+#navi {
+    position: sticky;
+    top: 100px;
+    left: 100px;
+    transition: margin-top 0.5s ease-in-out 0s;
+    text-align:center;
+    display: inline-block;
+    width:200px;
+    float:left;
+}
+
+/* 스크롤따라 움직임 */
 </style>
 <script>
     $(document).ready(function(){
@@ -78,23 +91,27 @@ $("li.group").eq(n).find("ul").show();
  
  
 </script>
+
+<sec:authorize access="isAuthenticated()">
 <ul id="navi">
+		<li class="group">
+			<div class="title">마이페이지</div>
+				<ul class="sub">
+					<li><a href="/update/${principal.member.id }">회원정보 수정</a></li>
+					<li><a href="/like/list/${principal.member.id }">찜한 캠핑장</a></li> 
+					<li><a href="/booking/bookList/${principal.member.id }">내 예약보기</a></li>
+				</ul>
+		</li>
+	<!-- 관리자만 볼수 있는 navi -->
+	<c:if test="${principal.member.role == 'ROLE_ADMIN' }">
         <li class="group">
-            <div class="title">개인정보</div>
+            <div class="title">관리자메뉴</div>
             <ul class="sub">
-                <li><a href="/update/${principal.member.id }">회원정보 수정/탈퇴</a></li>
+            	<li><a href="/insert">캠핑장 등록 폼</a></li>   
+                <li><a href="/memberList">전체 회원리스트</a></li>
+                <li><a href="/booking/adminList">전체 예약리스트</a></li>       
             </ul>
-        </li>
-        <li class="group">
-            <div class="title">찜목록</div>
-            <ul class="sub">
-                <li><a href="/like/list/${principal.member.id }">찜한 캠핑장</a></li>                
-            </ul>
-        </li>
-        <li class="group">
-            <div class="title">예약사이트</div>
-            <ul class="sub">
-                <li><a href="/booking/bookList/${principal.member.id}">예약정보</a></li>                
-            </ul>
-        </li>        
-    </ul>
+        </li>     
+	</c:if>
+</ul>
+</sec:authorize>

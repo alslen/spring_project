@@ -3,6 +3,7 @@
     
     
 <%@ include file="../includes/header.jsp"%>
+<%@ include file="/WEB-INF/views/user/menuBar.jsp"%>
 
 <div class="container">
 	<div class="content">
@@ -44,11 +45,11 @@
 		<label for="upload">캠핑장 사진:</label>
 		<input multiple="multiple" type="file" class="form-control" id="upload" name="upload[]" placeholder="Enter File"/><br>
 	</div>
-	<div class="form-group mb-3">
+	<div class="form-group form-inline mb-3">
 		<label for="campId">종류:</label>
-		<input type="radio" name="camp_category" value="1" checked>카라반
-		<input type="radio" name="camp_category" value="2">글램핑
-		<input type="radio" name="camp_category" value="3">캠핑장
+		<div style="vertical-align:center;"><input type="radio" name="camp_category" value="1" style="float:left; " checked><label style="float:right;">카라반</label></div>
+		<div style="vertical-align:center;"><input type="radio" name="camp_category" style="float:left;" value="2"><label  style="float:right;">글램핑</label></div>
+		<div style="vertical-align:center;"><input type="radio" name="camp_category" style="float:left;" value="3"><label  style="float:right;">캠핑장</label></div>
 	</div>
 	<div class="d-grid gap-2" >
 		<button type="button" class="btn btn-outline-warning btn-block" id="insertBtn">등록하기</button>
@@ -59,8 +60,8 @@
 
 
 <script>
-$("#insertBtn").click(function(){
-	if($("#camp_title").val()==""){
+ $("#insertBtn").click(function(){
+ 	/* if($("#camp_title").val()==""){
 		alert("캠핑장 명칭을 입력해주세요.")
 		$("#camp_title").focus();
 		return
@@ -104,7 +105,7 @@ $("#insertBtn").click(function(){
 		alert("사진을 등록해주세요.")
 		$("#upload").focus();
 		return
-	}
+	}   */
 	$("#frm").submit()
 })
 	

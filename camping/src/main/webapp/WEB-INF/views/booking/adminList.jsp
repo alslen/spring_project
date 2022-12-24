@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../includes/header_admin.jsp"%>
+<%@ include file="/WEB-INF/views/user/menuBar.jsp"%>
 <div class="container">
 	<div class="listcontent">
 	<h3 style="color:#ffc107; margin-top:50px;">예약목록(${acount})</h3>

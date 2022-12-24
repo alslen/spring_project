@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
+<style type="text/css">
+ a:link { color: black; text-decoration: none;}
+ a:visited { color: black; text-decoration: none;}
+ a:hover { color: black; text-decoration:none;}
+ a:active { color:black; text-decoration:none;}
+</style>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -36,108 +42,82 @@
 	</sec:authorize>
         <!-- Navigation-->
         <!------------------로그인 전 화면---------------------->
-        <nav class="navbar navbar-expand-lg navbar-light ">
-            <div class="container  px-4 px-lg-5 mr-auto">
-            <a href="/"><img src="/img/logo2.jpg" height="40" width="40" alt="My Image" style="margin-right:10px"></a>
-                <a class="navbar-brand" href="/">Camping Go</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse  " id="navbarSupportedContent" >
-      				 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 ">
-      				 <sec:authorize access="isAnonymous()">
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" >Menu</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/join">회원가입</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="/login">로그인</a></li>
-                                <li><a class="dropdown-item" href="#!">고객센터</a></li>
-                            </ul>
-                        </li>
-                     </sec:authorize>
-                    </ul>
+        
+		<!--
+		<div class="container" style="text-align:center;" >
+		<a href="/" style="display:block;"><img src="/img/logo2.jpg" alt="My Image" style="margin-right:10px; margin-bottom:20px; height:150; width:150;"></a>
+		<a class="navbar-brand" href="/" style="font-weight:bold; font-size:30px; color:#ffa806">CAMPING GO</a>
+		</div> 
+		-->
+		 <nav class="navbar">
+            <div class="container" style="margin-top:0; padding-top:0;">
+					<div id="grid_header">
+						<div class="header_top" style="text-align:right;" >
+						<sec:authorize access="isAnonymous">
+							<ul class="top_member_box">
+								<li><a href="/login">로그인</a></li>
+								<li><a href="/join">회원가입</a></li>
+							</ul>
+							</sec:authorize>
+							<sec:authorize access="isAuthenticated()">
+							<ul class="top_member_box">
+								<!-- <li><a href="/login">로그인</a></li>
+								<li><a href="/join">회원가입</a></li> -->
+								<li><a href="/update/${principal.member.id }">마이페이지</a></li>
+								<li><a href="/logout">로그아웃(<sec:authentication property="principal.member.username" />)</a></li>
+							</ul>	
+							</sec:authorize>
+						</div>
+					</div>
+       
+		            <div class="logo">
+		            <a href="/" class="logoimg"><img src="/img/logo2.jpg" alt="My Image" style="margin-right:10px; height:50; width:50;"></a>
+		            <a class="navbar-brand" href="/">Camping Go</a>
+		             </div>  
+                
+	      			 
                             <!------------------로그인 후 화면---------------------->
-   			 	<sec:authorize access="isAuthenticated()">
-                 <div class="collapse navbar-collapse  " id="navbarSupportedContent" >
-                     <ul class="navbar-nav "> 
-                     	<li class="nav-item dropdown ">
-                     		<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" >Menu</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/update/${principal.member.id }">내정보</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="booking">예약정보</a></li>
-                                <li><a class="dropdown-item" href="/logout">로그아웃(<sec:authentication property="principal.member.username" />)</a></li>
-                            </ul>
-                     	</li>
-                     </ul>
-                    <!-- 관리자만 볼 수 있는 메뉴 -->
+   				
+                
+                     <!-- 관리자만 볼 수 있는 메뉴 -->
+                 <!-- <sec:authorize access="isAuthenticated()">   
                  <c:if test="${principal.member.role == 'ROLE_ADMIN' }">
-                 <div class="collapse navbar-collapse  " id="navbarSupportedContent" >
                      <ul class="navbar-nav "> 
                      	<li class="nav-item dropdown ">
                      		<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" >관리자</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/memberList">회원목록</a></li>
+                                <li><a class="dropdown-item" href="">회원목록</a></li>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="/insert">캠핑장 등록</a></li>
-                                <li><a class="dropdown-item" href="/booking/adminList">예약 목록</a></li>
+                                <li><a class="dropdown-item" href="/">예약 목록</a></li>
+                                <li><a class="dropdown-item" href="/memberList">회원 목록</a></li>
                             </ul>
                      	</li>
                      </ul>
-                     </div>
                      </c:if>
-                     
-                     </div>
-                     </sec:authorize>
-                     
-                
-                     
-                     </div>
-                     </div>
-                     </nav>
+                </sec:authorize>
+              -->
+           </div>
+       </nav>
                      
        <!-- Header--> 
         <header class="py-5">
             	<div class="wrapper wrapper--w1070">
-                <div class="card-body">
-                    <form class="form" method="POST" action="#">
+                <div class="card-body" style="display:flex; justify-content:center;">
+                    <form class="form" action="/search" method="post">
                         <div class="input-group input--large">
-                            <label class="label">going to</label>
-                            <input class="input--style-1" type="button" placeholder="Camping name" name="going" id="btnGoing">
+                            <label class="label">Address</label>
+                            <input class="input--style-1" type="text" placeholder="Address" name="address" id="address">
                         </div>
-                        <div class="input-group input--medium">
-                            <label class="label">Check-In</label>
-                            <input class="input--style-1" type="text" name="checkin" placeholder="mm/dd/yyyy" id="input-start">
-                        </div>
-                        <div class="input-group input--medium">
-                            <label class="label">Check-Out</label>
-                            <input class="input--style-1" type="text" name="checkout" placeholder="mm/dd/yyyy" id="input-end">
-                        </div>
-                        <div class="input-group input--medium">
-                            <label class="label">guests</label>
-                            <div class="input-group-icon js-number-input">
-                                <div class="icon-con">
-                                    <span class="plus">+</span>
-                                    <span class="minus">-</span>
-                                </div>
-                                <input class="input--style-1 quantity" type="text" name="guests" value="2 Guests">
-                            </div>
-                        </div>
-                        <button class="btn-submit" type="submit">search</button>
+                        <div class="input-group input--large">
+                            <label class="label">CampTitle</label>
+                            <input class="input--style-1" type="text" placeholder="CampTitle" name="camp_title" id="camp_title">
+                        </div>                        
+                        <button class="btn-submit" type="submit" id="sbtn" style="height:100%">search</button>
                     </form>
                 </div>
             </div>
         </header>
-        
-        
-        <script>
-        $("#btnGoing").click(function(){
-        	window.open("/map", "", "width=550 height=450");
-        })
-        
-        
-        
-        </script>
-        
         
     <!-- Jquery JS-->
     <script src="/vendor/jquery/jquery.min.js"></script>
